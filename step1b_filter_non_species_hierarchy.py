@@ -8,6 +8,10 @@ import multiprocessing as mp
 from pathlib import Path
 import json
 
+from functools import reduce  # forward compatibility for Python 3
+import operator
+
+
 dataset_subset = "subset"
 # -1 for all
 desired_entries_count = -1
@@ -72,11 +76,25 @@ def has_occupation_politician(item: WikidataItem, truthy: bool = True) -> bool:
     ]
     return Q_POLITICIAN in occupation_qids
 
+def getFromDict(dataDict, mapList):
+    return reduce(operator.getitem, mapList, dataDict)
+
+def setInDict(dataDict, mapList, value):
+    getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
+
+def return_values(entity_dict):
+    out_dict = {}
+    types = ['type', 'id', 'labels.en', 'descriptions.en', 'aliases.en', 'claims', 'pageid', 'ns', 'title', 'lastrevid', 'modified']
+    for i in types:
+        li = i.split('.')
+        setInDict(out_dict, li, getFromDict(entity_dict, li))
+    return out_dict
+
 def apply_entry(entity_dict):
      if entity_dict["type"] == "item":
         entity = WikidataItem(entity_dict)
         if is_instance_of_taxon(entity) and not is_rank_species(entity):
-            return entity._entity_dict
+            return return_values(entity._entity_dict)
 
 def get_x(iter, x):
     li = []
@@ -99,7 +117,7 @@ if __name__=='__main__':
     processed = 0
     t1 = time.time()
 
-    li = process_map(apply_entry, get_x(wjd.__iter__(), 10000), chunksize=1, max_workers=8)
+    li = process_map(apply_entry, wjd.__iter__(), chunksize=1, max_workers=8)
     
     print(len(li))
 
