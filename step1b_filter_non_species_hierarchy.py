@@ -91,7 +91,7 @@ if __name__=='__main__':
     Path('./data/').mkdir(parents=True, exist_ok=True)
     
     # create an instance of WikidataJsonDump
-    wjd_dump_path = "./data/wikidata-20220103-all.json.gz"
+    wjd_dump_path = "./data/wikidata-20230213-all.json.bz2"
     wjd = WikidataJsonDump(wjd_dump_path)
 
 
@@ -99,7 +99,7 @@ if __name__=='__main__':
     processed = 0
     t1 = time.time()
 
-    li = process_map(apply_entry, get_x(wjd.__iter__(), 10000), chunksize=1000, max_workers=8)
+    li = process_map(apply_entry, get_x(wjd.__iter__(), 10000), chunksize=1, max_workers=8)
     
     print(len(li))
 
@@ -107,7 +107,7 @@ if __name__=='__main__':
 
     print(len(li))
 
-    with open("non_species_hierarchy.json", "w", encoding='utf-8') as fp:
+    with open("data/non_species_hierarchy.json", "w", encoding='utf-8') as fp:
         json.dump(li, fp)
     
 
