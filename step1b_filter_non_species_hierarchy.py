@@ -117,7 +117,7 @@ if __name__=='__main__':
     processed = 0
     t1 = time.time()
 
-    li = process_map(apply_entry, wjd.__iter__(), chunksize=1, max_workers=8)
+    li = process_map(apply_entry, list(wjd.__iter__()), chunksize=1, max_workers=16)
     
     print(len(li))
 
