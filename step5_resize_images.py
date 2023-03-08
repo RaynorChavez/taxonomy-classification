@@ -2,7 +2,7 @@ import os
 from PIL import Image
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-dataset_subset = "subset1k"
+dataset_subset = "subset10k"
 
 def resize_image(image_path, new_size):
     with Image.open(image_path) as image:
@@ -22,9 +22,12 @@ def process_images_in_folder(folder_path, output_folder, new_size):
     futures = []
 
     for i, filename in enumerate(os.listdir(folder_path)):
+        if not filename.endswith('.jpg'):
+            continue
         image_path = os.path.join(folder_path, filename)
         future = resize_pool.submit(resize_image, image_path, new_size)
         futures.append((future, filename, i + 1))
+
 
     for future, filename, image_num in futures:
         resized_image = future.result()
