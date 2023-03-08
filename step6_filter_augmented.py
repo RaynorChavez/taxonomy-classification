@@ -28,6 +28,6 @@ with open(final_text_aug) as f:
         if processed%1000 == 0:
             print("Processed: ", processed, "entries")
 
-with open(f'./data/textaug_{split}_{dataset_subset}', 'w') as f:
+with open(f'./data/textaug_{split}_{dataset_subset}.json', 'w') as f:
     for item in textaug_full:
         f.write(json.dumps(item)+'\n')
