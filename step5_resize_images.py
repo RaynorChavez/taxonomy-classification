@@ -28,6 +28,6 @@ def process_images_in_folder(folder_path, output_folder, new_size):
 
 if __name__ == '__main__':
     folder_path = f'./data/{dataset_subset}_taxo_data_images'
-    output_folder = f'./data/taxo_data_images_resized'
+    output_folder = f'./data/taxo_data_images_{dataset_subset}_resized'
     new_size = (225, 225)
     process_images_in_folder(folder_path, output_folder, new_size)

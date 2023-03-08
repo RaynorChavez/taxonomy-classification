@@ -5,7 +5,7 @@ import time
 
 dataset_subset = "subset1k"
 split = "train"
-Path(f'./data/{dataset_subset}_taxo_data_images/').mkdir(parents=True, exist_ok=True)
+Path(f'./data/taxo_data_images_{dataset_subset}_resized/').mkdir(parents=True, exist_ok=True)
 
 processed = 0
 final_text_aug = f'./data/textaug_{dataset_subset}.json'
@@ -18,9 +18,9 @@ with open(final_text_aug) as f:
 
         # Get filename and check if image exists locally
         image_filename = item["filename"][17:]
-        local_path = f"./data/{dataset_subset}_"+item["filename"][0:17]+image_filename
-        
-        if Path(local_path).is_file() and item["filename"][-4:] == ".jpg":
+        local_path = f"./data/taxo_data_images_{dataset_subset}_resized/"+image_filename
+        print(local_path)
+        if Path(local_path).is_file():
             textaug_full.append(item)
             #print(f"{image_filename}: exists")
         
