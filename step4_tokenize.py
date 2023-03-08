@@ -11,7 +11,7 @@ import sys
 import time
 nltk.download('punkt')
 
-dataset_subset = "subset10k"
+dataset_subset = "subset1k"
 final_text_aug = f'./data/{dataset_subset}_final_text_aug.json'
 tokenized_path = f'./data/{dataset_subset}_tokenized.json'
 
@@ -21,8 +21,8 @@ with open(final_text_aug) as f:
     t0 = time.time()
     processed = 0
     sentid = 0
-    for item in ijson.items(f, "item"):
-        #print(f"{item}\n")
+    for line in f:
+        item = json.loads(line)
         tokenized["images"].append(
             {
                 "filename": item["filename"][17:],
