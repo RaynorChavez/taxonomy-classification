@@ -313,6 +313,7 @@ class ImageTextDataset(VisionDataset):
             for count, filepath in enumerate(filepaths):
                 with jsonlines.open(filepath, "r") as reader:
                     for example in reader:
+                        print(f"example: {example['captions']}")
                         self.captions.extend(example["captions"][:captions_per_image])
                         self.image_paths.extend([example["filename"]] * captions_per_image)
             print(f"{count+1} input files for {split} split found")
