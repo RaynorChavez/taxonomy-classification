@@ -29,6 +29,8 @@ for i, filename in enumerate(os.listdir(folder_path)):
                 # Append the modified JSON object to the new list
                 new_json_data.append(image_data)
                 break
+            if i%1000 == 0:
+                print("Processed: ", i, "entries")
 
 # Write the updated JSON objects back to the file
 with open(json_path, "w") as f:
