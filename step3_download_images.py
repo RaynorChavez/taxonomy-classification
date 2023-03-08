@@ -17,7 +17,7 @@ from pathvalidate import ValidationError, validate_filename
 from pathvalidate import sanitize_filename
 import os
 
-dataset_subset = "subset10k"
+dataset_subset = "subset1k"
 Path(f'./data/logs/').mkdir(parents=True, exist_ok=True)
 Path(f'./data/{dataset_subset}_taxo_data_images/').mkdir(parents=True, exist_ok=True)
 
@@ -45,7 +45,7 @@ with open(per_image_cleaned) as f:
             final_textaug.append(item)
             log.append(log_entry)
 
-            print(f"{image_filename}: exists")
+            #print(f"{image_filename}: exists")
 
             continue
 
