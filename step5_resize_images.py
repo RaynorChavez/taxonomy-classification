@@ -46,8 +46,9 @@ dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_worke
 # Loop through the dataloader and save the transformed images to disk
 for i, (images, labels) in enumerate(dataloader):
     for j in range(images.size(0)):
-        original_filename = dataset.imgs[i*batch_size+j]
+        original_filename = dataset.imgs[i * batch_size + j]
         image = transforms.ToPILImage()(images[j])
         filename = os.path.basename(original_filename)
         save_path = f'./data/subset1k_taxo_data_images_resized/{filename}'
         image.save(save_path)
+
