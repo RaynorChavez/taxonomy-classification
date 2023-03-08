@@ -1,6 +1,6 @@
 import time
 
-from tqdm.contrib.concurrent import process_map
+from pqdm.threads import pqdm
 from qwikidata.entity import WikidataItem
 from qwikidata.json_dump import WikidataJsonDump
 from qwikidata.utils import dump_entities_to_json
@@ -109,7 +109,7 @@ if __name__=='__main__':
     Path('./data/').mkdir(parents=True, exist_ok=True)
     
     # create an instance of WikidataJsonDump
-    wjd_dump_path = "./data/wikidata-20230213-all.json.bz2"
+    wjd_dump_path = "./data/wikidata-20230213-all.json.bz2" # "./data/wikidata-20220103-all.json.gz"
     wjd = WikidataJsonDump(wjd_dump_path)
 
 
@@ -117,7 +117,8 @@ if __name__=='__main__':
     processed = 0
     t1 = time.time()
 
-    li = process_map(apply_entry, list(wjd.__iter__()), chunksize=1, max_workers=16)
+    print("done wjd")
+    li = pqdm(wjd.__iter__(), apply_entry, n_jobs=32, argument_type='args')
     
     print(len(li))
 
