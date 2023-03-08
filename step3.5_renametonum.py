@@ -1,11 +1,13 @@
 import os
 import json
 
+dataset_subset = "subset1k"
+
 # Specify the path to the folder containing the images
-folder_path = './data/subset1k_taxo_data_images'
+folder_path = f'./data/{dataset_subset}_taxo_data_images'
 
 # Specify the path to the JSON file containing the image data
-json_path = './data/textaug_subset1k.json'
+json_path = f'./data/textaug_{dataset_subset}.json'
 
 # Load the JSON data
 with open(json_path) as f:
