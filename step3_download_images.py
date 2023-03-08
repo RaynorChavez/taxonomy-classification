@@ -17,7 +17,7 @@ from pathvalidate import ValidationError, validate_filename
 from pathvalidate import sanitize_filename
 import os
 
-dataset_subset = "subset1k"
+dataset_subset = "subset10k"
 Path(f'./data/logs/').mkdir(parents=True, exist_ok=True)
 Path(f'./data/{dataset_subset}_taxo_data_images/').mkdir(parents=True, exist_ok=True)
 
