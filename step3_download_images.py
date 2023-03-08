@@ -15,27 +15,19 @@ import time
 import sys
 from pathvalidate import ValidationError, validate_filename
 from pathvalidate import sanitize_filename
+import os
 
-dataset_subset = "full"
+dataset_subset = "subset1k"
 Path(f'./data/logs/').mkdir(parents=True, exist_ok=True)
 Path(f'./data/{dataset_subset}_taxo_data_images/').mkdir(parents=True, exist_ok=True)
 
 processed = 0
 per_image_cleaned = f'./data/{dataset_subset}_per_image_cleaned.json'
-final_textaug_path = f'./data/{dataset_subset}_final_text_aug.json'
-logs = f'./data/logs/{dataset_subset}_img_download_log.json'
+
+final_textaug = []
+log = []
 with open(per_image_cleaned) as f:
-
-    #Initialize JSON outputs
-    log = open(logs, 'a')
-    log.truncate(0)
-    log.write("[")
-
-    final_textaug = open(final_textaug_path, 'a')
-    final_textaug.truncate(0)
-    final_textaug.write("[")
     
-    first_object = True  # flag to keep track of first object
     t0 = time.time()
     for item in ijson.items(f, "item"):
         processed += 1
@@ -50,9 +42,11 @@ with open(per_image_cleaned) as f:
                 "status": "exists_locally",
                 "file": image_filename,
             }
-            final_textaug.write(json.dumps(item))
-            log.write(json.dumps(log_entry))
+            final_textaug.append(item)
+            log.append(log_entry)
+
             print(f"{image_filename}: exists")
+
             continue
 
         # Construct image url
@@ -64,14 +58,8 @@ with open(per_image_cleaned) as f:
 
         # Request the image from the url
         img_data = requests.get(url, headers=headers)
-        
+
         if img_data.ok:
-            if not first_object:
-                # add a comma before each object after the first one
-                final_textaug.write(",")
-                log.write(",")
-            else:
-                first_object = False  # set flag to False after writing the first object
             
             # Validate if filename is suitable
             try:
@@ -92,7 +80,7 @@ with open(per_image_cleaned) as f:
             # Write final augmented JSON database
             final_textaug_entry = item
             final_textaug_entry["filename"] = final_textaug_entry["filename"][0:17]+image_filename
-            final_textaug.write(json.dumps(final_textaug_entry))
+            final_textaug.append(final_textaug_entry)
 
             # Log entry
             log_entry = {
@@ -101,7 +89,7 @@ with open(per_image_cleaned) as f:
                 "file": image_filename,
                 "source": url
             }
-            log.write(json.dumps(log_entry))
+            log.append(log_entry)
             
         else:
             log_entry = {
@@ -110,22 +98,23 @@ with open(per_image_cleaned) as f:
                 "file": image_filename,
                 "source": url
             }
-            if not first_object:
-                # add a comma before each object after the first one
-                log.write(",")
-            else:
-                first_object = False  # set flag to False after writing the first object
-            
-            # Log entry
-            log.write(json.dumps(log_entry))
-            print(f'Image Couldn\'t be retrieved\n\t{image_filename}\n\t{url}')
 
+            # Log entry
+            log.append(log_entry)
+            print(f'Image Couldn\'t be retrieved\n\t{image_filename}\n\t{url}')
+        
         # Progress Indicator
         if processed%20 == 0:
-            print(f"Downloaded {processed} images. Start time: {t0} Time now: {time.time()}")
+            print(f"Downloaded {processed} images. Start time: {t0} Elapsed: {time.time() - t0}")
+        if processed%1000 == 0:
+            print("Processed: ", processed, "entries")
 
     # Close JSON outputs
-    final_textaug.write("]")
-    final_textaug.close
-    log.write("]")
-    log.close
+    # remove the last character of the file final_textaug
+ 
+    with open(f'./data/{dataset_subset}_final_text_aug.json', 'w') as f:
+        json.dump(final_textaug, f)
+
+    with open(f'./data/logs/{dataset_subset}_img_download_log.json', 'w') as f:
+        json.dump(log, f)
+
