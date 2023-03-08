@@ -112,7 +112,7 @@ with open(per_image_cleaned) as f:
     # Close JSON outputs
     # remove the last character of the file final_textaug
  
-    with open(f'./data/{dataset_subset}_final_text_aug.json', 'w') as f:
+    with open(f'./data/textaug_{dataset_subset}.json', 'w') as f:
         for entry in final_textaug:
             json.dump(entry, f)
             f.write('\n')
