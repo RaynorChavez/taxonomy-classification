@@ -1,54 +1,26 @@
-from torchvision import transforms
-from torchvision.datasets import ImageFolder
-from torch.utils.data import Dataset, DataLoader
-from PIL import Image
 import os
+from PIL import Image
+from concurrent.futures import ThreadPoolExecutor
 
-# Define the path to the folder of images
-dataset_path = "./data/subset1k_taxo_data_images/"
+dataset_subset = "subset1k"
 
-# Define the target image size
-target_size = 256
+def resize_image(image_path, new_size, output_folder):
+    with Image.open(image_path) as image:
+        image = image.resize(new_size)
+        output_path = os.path.join(output_folder, os.path.basename(image_path))
+        image.save(output_path)
 
-# Define the transformation pipeline
-transform = transforms.Compose([
-    transforms.Resize(target_size),
-    transforms.ToTensor(),
-])
 
-# Define a custom dataset that ignores class labels
-class NoClassImageDataset(Dataset):
-    def __init__(self, root_dir, transform=None):
-        self.root_dir = root_dir
-        self.transform = transform
-        self.imgs = sorted(os.listdir(root_dir))
-        
-    def __getitem__(self, idx):
-        img_path = os.path.join(self.root_dir, self.imgs[idx])
-        img = Image.open(img_path).convert('RGB')
-        
-        if self.transform:
-            img = self.transform(img)
-        
-        return img, 0
-    
-    def __len__(self):
-        return len(self.imgs)
+def process_images_in_folder(folder_path, output_folder, new_size):
+    with ThreadPoolExecutor() as executor:
+        for filename in os.listdir(folder_path):
+            image_path = os.path.join(folder_path, filename)
+            executor.submit(resize_image, image_path, new_size, output_folder)
 
-# Create a custom dataset and apply the transformation pipeline to it
-dataset = NoClassImageDataset(dataset_path, transform=transform)
 
-# Create a dataloader to load the transformed images in batches
-batch_size = 32
-num_workers = 4  # Set this to the number of CPU cores you want to use for loading and transforming the data
-dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-
-# Loop through the dataloader and save the transformed images to disk
-for i, (images, labels) in enumerate(dataloader):
-    for j in range(images.size(0)):
-        original_filename = dataset.imgs[i * batch_size + j]
-        image = transforms.ToPILImage()(images[j])
-        filename = os.path.basename(original_filename)
-        save_path = f'./data/subset1k_taxo_data_images_resized/{filename}'
-        image.save(save_path)
-
+if __name__ == '__main__':
+    folder_path = f'./data/{dataset_subset}_taxo_data_images'
+    output_folder = f'./data/{dataset_subset}_taxo_data_images_resized'
+    new_size = (225, 225)
+    os.makedirs(output_folder, exist_ok=True)
+    process_images_in_folder(folder_path, output_folder, new_size)
