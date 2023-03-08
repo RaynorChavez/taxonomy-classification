@@ -304,6 +304,7 @@ class ImageTextDataset(VisionDataset):
         else:
             prefix = ""
         filepaths = Path(root).glob(f"{prefix}{split}*.jsonl")
+        print(f"filepaths: {filepaths} len: {len(filepaths)}")
         self.captions = []
         self.image_paths = []
         if not filepaths:

@@ -1,5 +1,5 @@
-/data/*
-/tvenv/*
+data/*
+tvenv/*
 steps_gcloudvm/*
-text_augmented_dataset_rsicd.json
 arguments.json
+text_augmented_dataset_rsicd.json
