@@ -4,10 +4,11 @@ import json
 import time
 
 dataset_subset = "subset1k"
+split = "train"
 Path(f'./data/{dataset_subset}_taxo_data_images/').mkdir(parents=True, exist_ok=True)
 
 processed = 0
-final_text_aug = f'./data/{dataset_subset}_final_text_aug.json'
+final_text_aug = f'./data/textaug_{dataset_subset}.json'
 
 textaug_full = []
 with open(final_text_aug) as f:
@@ -27,6 +28,6 @@ with open(final_text_aug) as f:
         if processed%1000 == 0:
             print("Processed: ", processed, "entries")
 
-with open(f'./data/textaug_{dataset_subset}_filteredimg.json', 'w') as f:
+with open(f'./data/textaug_{split}_{dataset_subset}', 'w') as f:
     for item in textaug_full:
         f.write(json.dumps(item)+'\n')
