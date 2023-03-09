@@ -169,6 +169,17 @@ wjd = WikidataJsonDump(wjd_dump_path)
 # Loop through the list of image files
 
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+from tensorflow.python.distribute.cluster_resolver.tpu.tpu_cluster_resolver import is_running_in_gce  # pylint: disable=unused-import
+from tensorflow.python.distribute.cluster_resolver.tpu.tpu_cluster_resolver import TPUClusterResolver
+from tensorflow.python.util.tf_export import tf_export
+
+tf_export('distribute.cluster_resolver.TPUClusterResolver')(TPUClusterResolver)
+
+
 # https://www.kaggle.com/code/ashrafkhan94/fruits-classification-image-processing-using-tpu/notebook
 tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
 tf.config.experimental_connect_to_cluster(tpu)
