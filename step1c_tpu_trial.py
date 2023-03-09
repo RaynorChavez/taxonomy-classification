@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 """
 import os
 from PIL import Image
@@ -168,10 +171,6 @@ wjd = WikidataJsonDump(wjd_dump_path)
 
 # Loop through the list of image files
 
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 from tensorflow.python.distribute.cluster_resolver.tpu.tpu_cluster_resolver import is_running_in_gce  # pylint: disable=unused-import
 from tensorflow.python.distribute.cluster_resolver.tpu.tpu_cluster_resolver import TPUClusterResolver
