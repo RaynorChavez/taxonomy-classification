@@ -1,4 +1,8 @@
+from collections import defaultdict
 import time
+from typing import DefaultDict
+
+from tqdm import tqdm
 
 from pqdm.threads import pqdm
 from qwikidata.entity import WikidataItem
@@ -23,6 +27,7 @@ P_IMAGE = "P18"
 Q_POLITICIAN = "Q82955"
 Q_TAXON = "Q16521"
 Q_SPECIES = "Q7432"
+
 
 def is_instance_of_taxon(item: WikidataItem, truthy: bool = True) -> bool:
     """Return True if the Wikidata Item is an instance of taxon."""
@@ -77,23 +82,45 @@ def has_occupation_politician(item: WikidataItem, truthy: bool = True) -> bool:
     return Q_POLITICIAN in occupation_qids
 
 def getFromDict(dataDict, mapList):
+    for item in mapList:
+        if item in dataDict:
+            dataDict = dataDict[item]
+        else:
+            return ""
+    return dataDict
     return reduce(operator.getitem, mapList, dataDict)
 
 def setInDict(dataDict, mapList, value):
     getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
 
+def map_claims_id(claim, id=False):
+    if id:
+        return [c['mainsnak'].get('datavalue', {'value':{'id':''}})['value']['id'] for c in claim]     
+    return [c['mainsnak']['datavalue']['value'] for c in claim]
+
 def return_values(entity_dict):
-    out_dict = {}
-    types = ['type', 'id', 'labels.en', 'descriptions.en', 'aliases.en', 'claims', 'pageid', 'ns', 'title', 'lastrevid', 'modified']
+    out_dict = defaultdict(lambda x: {})
+    types = ['id', 'labels.en.value', 'descriptions.en.value', 'claims.P171', 'claims.P18', 'claims.P105', 'lastrevid', 'aliases.en.value', ]#'type', 'pageid', 'ns', 'title','modified']
     for i in types:
+        # print(i)
         li = i.split('.')
-        setInDict(out_dict, li, getFromDict(entity_dict, li))
+        if li[-1]=='value':
+            out_dict[li[0]] = getFromDict(entity_dict, li)
+        elif li[0]!='claims':
+            out_dict[li[0]] = {}
+            setInDict(out_dict, li, getFromDict(entity_dict, li))
+        elif li[1]=='P171':
+            setInDict(out_dict, ['parent_taxon'], map_claims_id(getFromDict(entity_dict, li),id=True))
+        elif li[1]=='P105':
+            setInDict(out_dict, ['taxon_rank'], map_claims_id(getFromDict(entity_dict, li),id=True)[0])
+        elif li[1]=='P18':
+            setInDict(out_dict, ['image_fn'], map_claims_id(getFromDict(entity_dict, li)))
     return out_dict
 
 def apply_entry(entity_dict):
      if entity_dict["type"] == "item":
         entity = WikidataItem(entity_dict)
-        if is_instance_of_taxon(entity) and not is_rank_species(entity):
+        if is_instance_of_taxon(entity):
             return return_values(entity._entity_dict)
 
 def get_x(iter, x):
@@ -109,26 +136,38 @@ if __name__=='__main__':
     Path('./data/').mkdir(parents=True, exist_ok=True)
     
     # create an instance of WikidataJsonDump
-    wjd_dump_path = "./data/wikidata-20230213-all.json.bz2" # "./data/wikidata-20220103-all.json.gz"
+    wjd_dump_path = "./data/wikidata-20220103-all.json.gz" # "./data/wikidata-20230213-all.json.bz2"
     wjd = WikidataJsonDump(wjd_dump_path)
 
+    li = []
 
     # create an iterable of WikidataItem representing politicians
     processed = 0
     t1 = time.time()
 
     print("done wjd")
-    li = pqdm(wjd.__iter__(), apply_entry, n_jobs=32, argument_type='args')
-    
-    print(len(li))
 
-    li = list(filter(lambda x: x is not None, li))
+    import pandas as pd
 
-    print(len(li))
+    import warnings
+    warnings.simplefilter(action='ignore', category=FutureWarning)
 
+
+    df = pd.DataFrame()
+
+    for i, item in tqdm(enumerate(wjd.__iter__(), 1000), total=102149876):
+        fix_item = apply_entry(item)
+        if fix_item is None:
+            continue
+        df = df.append(fix_item, ignore_index=True)
+    print(len(df))
+
+    df.to_csv("data/non_species_hierarchy.csv", encoding='utf-8', index=False)
+
+'''
     with open("data/non_species_hierarchy.json", "w", encoding='utf-8') as fp:
         json.dump(li, fp)
-    
+''' 
 
 
 ## write the iterable of WikidataItem to disk as JSON
