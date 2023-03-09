@@ -34,6 +34,13 @@ with open(per_image_cleaned) as f:
         
         # Get filename and check if image exists locally
         image_filename = item["filename"][17:]
+        # Validate if filename is suitable
+        try:
+            validate_filename(image_filename, platform="Windows")
+        except ValidationError as e:
+            print("{}\n".format(e), file=sys.stderr)
+            print("{} -> {}".format(image_filename, sanitize_filename(image_filename)))
+            image_filename = sanitize_filename(image_filename)
         local_path = f"./data/{dataset_subset}_"+item["filename"][0:17]+image_filename
         
         if Path(local_path).is_file():
