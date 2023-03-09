@@ -19,7 +19,7 @@ with open(final_text_aug) as f:
 
         # Get filename and check if image exists locally
         image_filename = item["filename"][17:]
-        print(item)
+        #print(item)
         local_path = os.path.join(resized_folder, image_filename)
         
         if os.path.isfile(local_path):

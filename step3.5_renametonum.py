@@ -19,7 +19,7 @@ counter = 0
 # Iterate over each image file in the folder
 for i, filename in enumerate(os.listdir(folder_path)):
     # Check if the file is an image
-    if filename.endswith(".jpg") or filename.endswith(".png") or filename.endswith(".jpeg"):
+    if filename.endswith(".jpg") or filename.endswith(".png") or filename.endswith(".jpeg") or filename.endswith(".JPG"):
         # Get the corresponding JSON object
         for j in range(len(json_data)):
             image_data = json.loads(json_data[j])
@@ -32,7 +32,7 @@ for i, filename in enumerate(os.listdir(folder_path)):
                 new_json_data.append(image_data)
                 break
         counter +=1
-        if counter%1000 == 0:
+        if counter%300 == 0:
             print("Processed: ", counter, "entries")
 
 # Write the updated JSON objects back to the file

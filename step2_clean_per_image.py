@@ -8,7 +8,7 @@ per_image_cleaned = []
 # Add an entry for animal type, place in taxonomy. Further perusal of wikidata shows that their information is inaccurat
 #   - will forego this step for now. Might augment data from other sources in the future.
 
-dataset_subset = "subset10k"
+dataset_subset = "subset1k"
 
 filename = f'./data/{dataset_subset}_filtered_taxons.json'
 with open(filename) as f:
