@@ -52,7 +52,7 @@ import os
 import tensorflow as tf
 
 # Set the path to the directory containing the images
-dataset_subset = "subset1k"
+dataset_subset = "full"
 image_dir = f'./data/{dataset_subset}_taxo_data_images'
 
 # Set the desired image size
