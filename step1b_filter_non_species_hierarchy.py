@@ -136,7 +136,7 @@ if __name__=='__main__':
     Path('./data/').mkdir(parents=True, exist_ok=True)
     
     # create an instance of WikidataJsonDump
-    wjd_dump_path = "./data/wikidata-20220103-all.json.gz" # "./data/wikidata-20230213-all.json.bz2"
+    wjd_dump_path = "./data/wikidata-20230213-all.json.bz2" # "./data/wikidata-20220103-all.json.gz" # "./data/wikidata-20230213-all.json.bz2"
     wjd = WikidataJsonDump(wjd_dump_path)
 
     li = []
