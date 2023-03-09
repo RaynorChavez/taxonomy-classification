@@ -112,7 +112,7 @@ def return_values(entity_dict):
         elif li[1]=='P171':
             setInDict(out_dict, ['parent_taxon'], map_claims_id(getFromDict(entity_dict, li),id=True))
         elif li[1]=='P105':
-            setInDict(out_dict, ['taxon_rank'], map_claims_id(getFromDict(entity_dict, li),id=True)[0])
+            setInDict(out_dict, ['taxon_rank'], map_claims_id(getFromDict(entity_dict, li),id=True))
         elif li[1]=='P18':
             setInDict(out_dict, ['image_fn'], map_claims_id(getFromDict(entity_dict, li)))
     return out_dict
