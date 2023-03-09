@@ -155,14 +155,21 @@ if __name__=='__main__':
 
     df = pd.DataFrame()
 
-    for i, item in tqdm(wjd.__iter__(), total=102149876):
+    start = 0000000
+    count = 10000000
+    for i, item in tqdm(enumerate(wjd.__iter__()), total=102149876):
+        if i<start:
+            continue
+        elif i>count+start:
+            break
         fix_item = apply_entry(item)
         if fix_item is None:
             continue
         df = df.append(fix_item, ignore_index=True)
+    
     print(len(df))
 
-    df.to_csv("data/non_species_hierarchy.csv", encoding='utf-8', index=False)
+    df.to_csv(f"data/non_species_hierarchy_{str(count[0])}.csv", encoding='utf-8', index=False)
 
 '''
     with open("data/non_species_hierarchy.json", "w", encoding='utf-8') as fp:
