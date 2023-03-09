@@ -53,10 +53,13 @@ with open(per_image_cleaned) as f:
             log.append(log_entry)
 
             #print(f"{image_filename}: exists")
+            if processed%1000 == 0:
+                print("Processed: ", processed, "entries")
 
             continue
 
         # Construct image url
+        image_filename = item["filename"][17:]
         md5 = hashlib.md5(image_filename.encode('utf-8')).hexdigest()
         a = md5[0]
         b = md5[1]
