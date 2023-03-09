@@ -155,7 +155,7 @@ if __name__=='__main__':
 
     df = pd.DataFrame()
 
-    for i, item in tqdm(enumerate(wjd.__iter__(), 1000), total=102149876):
+    for i, item in tqdm(wjd.__iter__(), total=102149876):
         fix_item = apply_entry(item)
         if fix_item is None:
             continue
