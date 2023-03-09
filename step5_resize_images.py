@@ -49,11 +49,12 @@ if __name__ == '__main__':
 """
 
 import os
+import pathlib
 import tensorflow as tf
 
 # Set the path to the directory containing the images
 dataset_subset = "subset1k"
-image_dir = f'./data/{dataset_subset}_taxo_data_images'
+image_dir = pathlib.Path(f'./data/{dataset_subset}_taxo_data_images')
 
 # Set the desired image size
 img_size = (224, 224)
@@ -73,24 +74,23 @@ def preprocess_image(file_path):
     return img
 
 # Get a list of all image files in the directory
-files = [os.path.join(image_dir, f) for f in os.listdir(image_dir)
-         if f.endswith('.jpg') or f.endswith('.jpeg') or f.endswith('.png')]
+files = list(image_dir.glob('*.[jJ][pP][gG]')) + list(image_dir.glob('*.[jJ][pP][eE][gG]')) + list(image_dir.glob('*.[pP][nN][gG]'))
 
 # Create a dataset from the list of file paths
-dataset = tf.data.Dataset.from_tensor_slices(files)
+dataset = tf.data.Dataset.from_tensor_slices([str(file) for file in files])
 
 # Use multiple threads to preprocess the images in parallel
 dataset = dataset.map(preprocess_image, num_parallel_calls=tf.data.experimental.AUTOTUNE)
 
 # Set the path to the directory to save the resized images
-save_dir = f'./data/taxo_data_images_{dataset_subset}_resized'
+save_dir = pathlib.Path(f'./data/taxo_data_images_{dataset_subset}_resized')
+save_dir.mkdir(parents=True, exist_ok=True)
 
 # Save the resized images
-for i, img in enumerate(dataset):
-    file_path = files[i]
-    img_name = os.path.splitext(os.path.basename(file_path))[0] + '.jpg'
-    img_path = os.path.join(save_dir, img_name)
+for file_path, img in zip(files, dataset):
+    img_name = file_path.stem + '.jpg'
+    img_path = save_dir / img_name
     img = tf.image.encode_jpeg(tf.cast(img * 255.0, tf.uint8))
-    tf.io.write_file(img_path, img)
+    tf.io.write_file(str(img_path), img)
 
     print(f"Resized {file_path} to {img_size} and saved to {img_path}")
