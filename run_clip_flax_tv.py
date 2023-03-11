@@ -303,15 +303,20 @@ class ImageTextDataset(VisionDataset):
             prefix = "textaug_"
         else:
             prefix = ""
-        filepaths = Path(root).glob(f"{prefix}{split}*.jsonl")
+        filepaths = Path(root).glob(f"{prefix}{split}*.json")
+        print(f"filepaths: {filepaths} | {prefix}{split}*.json")
         self.captions = []
         self.image_paths = []
-        for count, filepath in enumerate(filepaths):
-            with jsonlines.open(filepath, "r") as reader:
-                for example in reader:
-                    self.captions.extend(example["captions"][:captions_per_image])
-                    self.image_paths.extend([example["filename"]] * captions_per_image)
-        print(f"{count+1} input files for {split} split found")
+        if not filepaths:
+            print(f"No input files for {split} split found")
+        else:
+            for count, filepath in enumerate(filepaths):
+                with jsonlines.open(filepath, "r") as reader:
+                    for example in reader:
+                        #print(f"example: {example}")
+                        self.captions.extend(example["captions"][:captions_per_image])
+                        self.image_paths.extend([example["filename"]] * captions_per_image)
+            print(f"{count+1} input files for {split} split found")
     
     def _load_image(self, idx: int):
         path = f"{self.root}/{self.image_paths[idx]}"
@@ -510,6 +515,7 @@ def main():
     eval_preprocess = Transform(config.vision_config.image_size, False, augmentation_args)
     eval_preprocess = torch.jit.script(eval_preprocess)
 
+    print(f"data_dir: {data_args.data_dir}")
     # Initialize the image-text dataset
     train_dataset = ImageTextDataset(
         data_args.data_dir,
@@ -523,7 +529,7 @@ def main():
         data_args.data_dir,
         "valid",
         captions_per_image=1,
-        augment_captions=False, 
+        augment_captions=True, # REMEMBER TO PUT IT BACK TO FALSE
         transform=eval_preprocess,
     )
 
