@@ -89,7 +89,7 @@ fres = open(os.path.join(
     "data", "results", get_model_basename(args.model_dir) + ".tsv"), "w")
 num_predicted = 0
 for eval_image, label in zip(eval_images, labels):
-    if num_predicted % 100 == 0:
+    if num_predicted % 10 == 0:
         print("{:d} images evaluated".format(num_predicted))        
     label, preds = predict_one_image(
         eval_image, model, processor, class_names, max(K_VALUES))
