@@ -13,9 +13,7 @@ from transformers import CLIPProcessor, FlaxCLIPModel
 
 DATA_DIR = "/home/shared/data"
 # IMAGES_DIR = os.path.join(DATA_DIR, "RSICD_images")
-IMAGES_DIR = os.path.join(DATA_DIR, "rsicd_images")
-
-CAPTIONS_FILE = os.path.join(DATA_DIR, "dataset_rsicd.json")
+IMAGES_DIR = os.path.join(DATA_DIR)
 
 BASELINE_MODEL = "openai/clip-vit-base-patch32"
 MODEL_DIR = "/home/shared/models/clip-rsicd"
@@ -76,7 +74,7 @@ else:
 print("Retrieving evaluation images...", end="")
 eval_images = []
 df = pd.read_csv("data/validated_test_set.csv", encoding='utf-8')
-eval_images = df['fn'].map(lambda x: "test_images/"+x).tolist()
+eval_images = set(df['fn'].map(lambda x: "test_images/"+x).tolist())
 
 print("{:d} images found".format(len(eval_images)))
 
