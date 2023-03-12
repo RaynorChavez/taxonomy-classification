@@ -31,9 +31,8 @@ def parse_arguments():
 
 
 def predict_one_image(image_file, model, processor, class_names, k):
-    label = image_file.split('_')[0]
     eval_image = Image.fromarray(plt.imread(os.path.join(IMAGES_DIR, image_file)))
-    eval_sentences = ["Aerial photograph of {:s}".format(ct) for ct in class_names]
+    eval_sentences = ["Photograph of {:s}".format(ct) for ct in class_names]
     inputs = processor(text=eval_sentences,
                        images=eval_image,
                        return_tensors="jax",
@@ -44,7 +43,7 @@ def predict_one_image(image_file, model, processor, class_names, k):
     probs_np = np.asarray(probs)[0]
     probs_npi = np.argsort(-probs_np)
     predictions = [(class_names[i], probs_np[i]) for i in probs_npi[0:k]]
-    return label, predictions
+    return predictions
 
 
 def get_model_basename(model_dir):
@@ -74,20 +73,22 @@ else:
 print("Retrieving evaluation images...", end="")
 eval_images = []
 df = pd.read_csv("data/validated_test_set.csv", encoding='utf-8')
-eval_images = set(df['fn'].map(lambda x: "test_images/"+x.replace('.png','.jpg')).tolist())
+eval_images = df['fn'].map(lambda x: "test_images/"+x.replace('.png','.jpg')).tolist()
 
 print("{:d} images found".format(len(eval_images)))
 
 print("Retrieving class names...", end="")
-class_names = df['species'].tolist()
+class_names = set(df['species'].tolist())
 print("{:d} classes found".format(len(class_names)))
+
+labels = df['species'].tolist()
 
 
 print("Generating predictions...")
 fres = open(os.path.join(
-    "nbs", "results", get_model_basename(args.model_dir) + ".tsv"), "w")
+    "data", "results", get_model_basename(args.model_dir) + ".tsv"), "w")
 num_predicted = 0
-for eval_image in eval_images:
+for eval_image, label in zip(eval_images, labels):
     if num_predicted % 100 == 0:
         print("{:d} images evaluated".format(num_predicted))        
     label, preds = predict_one_image(
@@ -102,12 +103,12 @@ for eval_image in eval_images:
 print("{:d} images evaluated, COMPLETE".format(num_predicted))
 fres.close()
 
-'''
+
 print("Computing final scores...")
 num_examples = 0
 correct_k = [0] * len(K_VALUES)
 model_basename = get_model_basename(args.model_dir)
-fres = open(os.path.join("nbs", "results", model_basename + ".tsv"), "r")
+fres = open(os.path.join("data", "results", model_basename + ".tsv"), "r")
 for line in fres:
     cols = line.strip().split('\t')
     label = cols[1]
@@ -129,4 +130,3 @@ fscores.write("{:s}\t{:s}\n".format(
     model_basename, 
     "\t".join(["{:.3f}".format(s) for s in scores_k])))
 fscores.close()
-'''
