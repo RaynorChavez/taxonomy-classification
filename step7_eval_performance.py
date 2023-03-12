@@ -75,8 +75,8 @@ else:
 
 print("Retrieving evaluation images...", end="")
 eval_images = []
-df = pd.read_csv("test_images/validated_test_set.csv", encoding='utf-8')
-eval_images = df['fn'].map(lambda x: "data/"+x).tolist()
+df = pd.read_csv("data/validated_test_set.csv", encoding='utf-8')
+eval_images = df['fn'].map(lambda x: "test_images/"+x).tolist()
 
 print("{:d} images found".format(len(eval_images)))
 
