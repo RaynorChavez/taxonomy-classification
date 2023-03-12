@@ -78,7 +78,7 @@ eval_images = df['fn'].map(lambda x: "test_images/"+x.replace('.png','.jpg')).to
 print("{:d} images found".format(len(eval_images)))
 
 print("Retrieving class names...", end="")
-class_names = set(df['species'].tolist())
+class_names = df['species'].unique().tolist()
 print("{:d} classes found".format(len(class_names)))
 
 labels = df['species'].tolist()
