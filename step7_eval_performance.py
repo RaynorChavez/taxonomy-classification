@@ -11,7 +11,7 @@ from PIL import Image
 from transformers import CLIPProcessor, FlaxCLIPModel
 
 
-DATA_DIR = "/home/shared/data"
+DATA_DIR = "data/"
 # IMAGES_DIR = os.path.join(DATA_DIR, "RSICD_images")
 IMAGES_DIR = os.path.join(DATA_DIR)
 
