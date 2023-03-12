@@ -5,6 +5,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import pandas as pd
 
 from PIL import Image
 from transformers import CLIPProcessor, FlaxCLIPModel
@@ -74,19 +75,13 @@ else:
 
 print("Retrieving evaluation images...", end="")
 eval_images = []
-with open(CAPTIONS_FILE, "r") as fcap:
-    data = json.loads(fcap.read())
-for image in data["images"]:
-    if image["split"] == "test":
-        filename = image["filename"]
-        if filename.find("_") > 0:
-            eval_images.append(filename)
+df = pd.read_csv("test_images/validated_test_set.csv", encoding='utf-8')
+eval_images = df['fn'].map(lambda x: "data/"+x).tolist()
+
 print("{:d} images found".format(len(eval_images)))
 
 print("Retrieving class names...", end="")
-class_names = sorted(list(set([image_name.split("_")[0] 
-                               for image_name in os.listdir(IMAGES_DIR) 
-                               if image_name.find("_") > -1])))
+class_names = df['species'].tolist()
 print("{:d} classes found".format(len(class_names)))
 
 
@@ -109,6 +104,7 @@ for eval_image in eval_images:
 print("{:d} images evaluated, COMPLETE".format(num_predicted))
 fres.close()
 
+'''
 print("Computing final scores...")
 num_examples = 0
 correct_k = [0] * len(K_VALUES)
@@ -135,3 +131,4 @@ fscores.write("{:s}\t{:s}\n".format(
     model_basename, 
     "\t".join(["{:.3f}".format(s) for s in scores_k])))
 fscores.close()
+'''
