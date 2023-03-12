@@ -176,11 +176,11 @@ from tensorflow.python.distribute.cluster_resolver.tpu.tpu_cluster_resolver impo
 from tensorflow.python.distribute.cluster_resolver.tpu.tpu_cluster_resolver import TPUClusterResolver
 from tensorflow.python.util.tf_export import tf_export
 
-tf_export('distribute.cluster_resolver.TPUClusterResolver')(TPUClusterResolver)
+# tf_export('distribute.cluster_resolver.TPUClusterResolver')(TPUClusterResolver)
 
 
 # https://www.kaggle.com/code/ashrafkhan94/fruits-classification-image-processing-using-tpu/notebook
-tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
+tpu = tf.distribute.cluster_resolver.TPUClusterResolver("local")
 tf.config.experimental_connect_to_cluster(tpu)
 tf.tpu.experimental.initialize_tpu_system(tpu)
 
