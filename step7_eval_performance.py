@@ -86,7 +86,7 @@ labels = df['species'].tolist()
 
 print("Generating predictions...")
 fres = open(os.path.join(
-    "data", "results", get_model_basename(args.model_dir) + ".tsv"), "w")
+    "data", "results", get_model_basename(args.model_dir) + "_preds.tsv"), "w")
 num_predicted = 0
 for eval_image, label in zip(eval_images, labels):
     if num_predicted % 10 == 0:
@@ -108,7 +108,7 @@ print("Computing final scores...")
 num_examples = 0
 correct_k = [0] * len(K_VALUES)
 model_basename = get_model_basename(args.model_dir)
-fres = open(os.path.join("data", "results", model_basename + ".tsv"), "r")
+fres = open(os.path.join("data", "results", model_basename + "_scores.tsv"), "r")
 for line in fres:
     cols = line.strip().split('\t')
     label = cols[1]
