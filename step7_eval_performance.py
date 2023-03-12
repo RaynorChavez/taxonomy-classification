@@ -18,7 +18,6 @@ IMAGES_DIR = os.path.join(DATA_DIR)
 BASELINE_MODEL = "openai/clip-vit-base-patch32"
 MODEL_DIR = "/home/shared/models/clip-rsicd"
 K_VALUES = [1, 3, 5, 10]
-SCORES_FILE = os.path.join("nbs", "results", "scores.tsv")
 
 
 def parse_arguments():
@@ -108,7 +107,7 @@ print("Computing final scores...")
 num_examples = 0
 correct_k = [0] * len(K_VALUES)
 model_basename = get_model_basename(args.model_dir)
-fres = open(os.path.join("data", "results", model_basename + "_scores.tsv"), "r")
+fres = open(os.path.join("data", "results", model_basename + "_preds.tsv"), "r")
 for line in fres:
     cols = line.strip().split('\t')
     label = cols[1]
@@ -125,7 +124,7 @@ fres.close()
 scores_k = [ck / num_examples for ck in correct_k]
 print("\t".join(["score@{:d}".format(k) for k in K_VALUES]))
 print("\t".join(["{:.3f}".format(s) for s in scores_k]))
-fscores = open(SCORES_FILE, "a")
+fscores = open(os.path.join("data", "results", model_basename + "_score.tsv"), "w")
 fscores.write("{:s}\t{:s}\n".format(
     model_basename, 
     "\t".join(["{:.3f}".format(s) for s in scores_k])))
