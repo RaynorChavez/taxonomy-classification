@@ -4,11 +4,9 @@ from typing import DefaultDict
 
 from tqdm import tqdm
 
-from pqdm.threads import pqdm
 from qwikidata.entity import WikidataItem
 from qwikidata.json_dump import WikidataJsonDump
 from qwikidata.utils import dump_entities_to_json
-import multiprocessing as mp
 from pathlib import Path
 import json
 
