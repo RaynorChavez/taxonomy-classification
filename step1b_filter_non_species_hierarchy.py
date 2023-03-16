@@ -151,19 +151,16 @@ if __name__=='__main__':
     warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
-    with open('data/species_hierarchy.json', 'w', encoding='utf-8') as f:
+    with open('data/species_hierarchy_2.json', 'w', encoding='utf-8') as f:
         f.write('[\n')
-        start = 000000
+        start = 61013964
         i = 0
         for item in tqdm(wjd.__iter__()):
-            '''
+            
             if i<start:
                 i+=1
                 continue
-            elif i>count+start:
-                break
-            else:
-                i+=1'''
+            
             fix_item = apply_entry(item)
             if fix_item is None:
                 continue
