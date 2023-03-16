@@ -136,7 +136,7 @@ if __name__=='__main__':
     Path('./data/').mkdir(parents=True, exist_ok=True)
     
     # create an instance of WikidataJsonDump
-    wjd_dump_path = "./data/wikidata-20220103-all.json.gz" # "./data/wikidata-20220103-all.json.gz" # "./data/wikidata-20230213-all.json.bz2"
+    wjd_dump_path = "./data/wikidata-20230213-all.json.bz2" # "./data/wikidata-20220103-all.json.gz" # "./data/wikidata-20230213-all.json.bz2"
     wjd = WikidataJsonDump(wjd_dump_path)
 
     li = []
@@ -153,29 +153,26 @@ if __name__=='__main__':
     warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
-    df = pd.DataFrame()
+    with open('data/species_hierarchy.json', 'w', encoding='utf-8') as f:
+        f.write('[\n')
+        start = 000000
+        i = 0
+        for item in tqdm(wjd.__iter__()):
+            '''
+            if i<start:
+                i+=1
+                continue
+            elif i>count+start:
+                break
+            else:
+                i+=1'''
+            fix_item = apply_entry(item)
+            if fix_item is None:
+                continue
+            f.write(json.dumps(fix_item))
+            f.write(', \n')
+        f.write('\n]')
 
-    start = 000000
-    count = 10000
-    i = 0
-    for item in tqdm(wjd.__iter__(), total=102149876):
-        
-        if i<start:
-            i+=1
-            continue
-        elif i>count+start:
-            break
-        else:
-            i+=1
-        fix_item = apply_entry(item)
-        if fix_item is None:
-            continue
-        df = df.append(fix_item, ignore_index=True)
-        
-    
-    print(len(df))
-
-    df.to_csv(f"data/non_species_hierarchy_{str(count)[0]}.csv", encoding='utf-8', index=False)
 
 '''
     with open("data/non_species_hierarchy.json", "w", encoding='utf-8') as fp:
