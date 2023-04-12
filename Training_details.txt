@@ -1,14 +1,21 @@
 https://github.com/openai/CLIP/issues/150
 
-pip install transformers
+
 
 Important to installf Jax and Flax for TPU: https://cloud.google.com/tpu/docs/run-calculation-jax
 Install libtpu: https://github.com/pytorch/xla
+
+---------------------------------
+Order of dependency installation:
+---------------------------------
+pip install -r requirements.txt
 pip install jax[tpu] -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
-pip3 install torch_xla[tpuvm]
 pip install jsonlines
 pip install datasets
 pip install torchvision
+pip install flax
+pip install transformers
+---------------------------------
 
 Hyperparameter guide:
 W Tensorflow/compiler/xla/stream_executor/cuda/cuda_driver.cc:265] failed call to cuInit: UNKNOWN ERROR (303)
@@ -213,7 +220,7 @@ https://github.com/openai/CLIP/issues/150
 
 6. NA
 
-7. {
+7. running {
     "model_name_or_path": "openai/clip-vit-base-patch32",
     "dtype": "bfloat16",
     "save_optimizer": false,
@@ -229,7 +236,7 @@ https://github.com/openai/CLIP/issues/150
     "augment_images": true,
     "augment_captions": true,
     "captions_per_image": 12,
-    "output_dir": "./tmp/model7",
+    "output_dir": "./data/tmp/model7",
     "overwrite_output_dir": true,
     "do_train": true,
     "do_eval": true,
@@ -260,7 +267,7 @@ https://github.com/openai/CLIP/issues/150
     "resume_from_checkpoint": null
 }
 
-8. {
+8. running {
     "model_name_or_path": "openai/clip-vit-base-patch32",
     "dtype": "bfloat16",
     "save_optimizer": false,
@@ -276,7 +283,7 @@ https://github.com/openai/CLIP/issues/150
     "augment_images": true,
     "augment_captions": true,
     "captions_per_image": 12,
-    "output_dir": "./tmp/model8",
+    "output_dir": "./data/tmp/model8",
     "overwrite_output_dir": true,
     "do_train": true,
     "do_eval": true,
@@ -307,7 +314,7 @@ https://github.com/openai/CLIP/issues/150
     "resume_from_checkpoint": null
 }
 
-9. {
+9. not yet trained {
     "model_name_or_path": "openai/clip-vit-base-patch32",
     "dtype": "bfloat16",
     "save_optimizer": false,
@@ -323,7 +330,7 @@ https://github.com/openai/CLIP/issues/150
     "augment_images": true,
     "augment_captions": true,
     "captions_per_image": 12,
-    "output_dir": "./tmp/model9",
+    "output_dir": "./data/tmp/model9",
     "overwrite_output_dir": true,
     "do_train": true,
     "do_eval": true,
@@ -353,3 +360,146 @@ https://github.com/openai/CLIP/issues/150
     "skip_memory_metrics": true,
     "resume_from_checkpoint": null
 }
+
+10. running {
+    "model_name_or_path": "openai/clip-vit-base-patch32",
+    "dtype": "bfloat16",
+    "save_optimizer": false,
+    "dataset_name": null,
+    "data_dir": "./data/full_data",
+    "train_file": "./data/textaug_train_full_capaug.json",
+    "validation_file": "./data/textaug_valid_subset10k.json",
+    "max_train_samples": null,
+    "max_eval_samples": null,
+    "overwrite_cache": false,
+    "validation_split_percentage": 5,
+    "preprocessing_num_workers": 2,
+    "augment_images": true,
+    "augment_captions": true,
+    "captions_per_image": 8,
+    "output_dir": "./data/tmp/model10",
+    "overwrite_output_dir": true,
+    "do_train": true,
+    "do_eval": true,
+    "evaluation_strategy": "steps",
+    "per_device_train_batch_size": 8,
+    "per_device_eval_batch_size": 8,
+    "gradient_accumulation_steps": 16,
+    "learning_rate": 1e-7,
+    "weight_decay": 0.001,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.98,
+    "adam_epsilon": 1e-06,
+    "max_grad_norm": 1.0,
+    "num_train_epochs": 4,
+    "max_steps": -1,
+    "lr_scheduler_type": "linear",
+    "warmup_ratio": 0.2,
+    "logging_first_step": false,
+    "logging_steps": 50,
+    "save_strategy": "epoch",
+    "seed": 42,
+    "dataloader_drop_last": true,
+    "eval_steps": 200,
+    "run_name": "test6",
+    "adafactor": false,
+    "report_to": "all",
+    "skip_memory_metrics": true,
+    "resume_from_checkpoint": null
+}
+
+11. not yet training {
+    "model_name_or_path": "openai/clip-vit-base-patch32",
+    "dtype": "bfloat16",
+    "save_optimizer": false,
+    "dataset_name": null,
+    "data_dir": "./data/full_data",
+    "train_file": "./data/textaug_train_full_capaug.json",
+    "validation_file": "./data/textaug_valid_subset10k.json",
+    "max_train_samples": null,
+    "max_eval_samples": null,
+    "overwrite_cache": false,
+    "validation_split_percentage": 5,
+    "preprocessing_num_workers": 2,
+    "augment_images": true,
+    "augment_captions": true,
+    "captions_per_image": 8,
+    "output_dir": "./data/tmp/model11",
+    "overwrite_output_dir": true,
+    "do_train": true,
+    "do_eval": true,
+    "evaluation_strategy": "steps",
+    "per_device_train_batch_size": 8,
+    "per_device_eval_batch_size": 8,
+    "gradient_accumulation_steps": 16,
+    "learning_rate": 1e-7,
+    "weight_decay": 0.01,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.98,
+    "adam_epsilon": 1e-06,
+    "max_grad_norm": 1.0,
+    "num_train_epochs": 4,
+    "max_steps": -1,
+    "lr_scheduler_type": "linear",
+    "warmup_ratio": 0.2,
+    "logging_first_step": false,
+    "logging_steps": 50,
+    "save_strategy": "epoch",
+    "seed": 42,
+    "dataloader_drop_last": true,
+    "eval_steps": 200,
+    "run_name": "test6",
+    "adafactor": false,
+    "report_to": "all",
+    "skip_memory_metrics": true,
+    "resume_from_checkpoint": null
+}
+
+12. running {
+    "model_name_or_path": "openai/clip-vit-base-patch32",
+    "dtype": "bfloat16",
+    "save_optimizer": false,
+    "dataset_name": null,
+    "data_dir": "./data/full_data",
+    "train_file": "./data/textaug_train_full_capaug.json",
+    "validation_file": "./data/textaug_valid_subset10k.json",
+    "max_train_samples": null,
+    "max_eval_samples": null,
+    "overwrite_cache": false,
+    "validation_split_percentage": 5,
+    "preprocessing_num_workers": 2,
+    "augment_images": true,
+    "augment_captions": true,
+    "captions_per_image": 7,
+    "output_dir": "./data/tmp/model12",
+    "overwrite_output_dir": true,
+    "do_train": true,
+    "do_eval": true,
+    "evaluation_strategy": "steps",
+    "per_device_train_batch_size": 8,
+    "per_device_eval_batch_size": 8,
+    "gradient_accumulation_steps": 16,
+    "learning_rate": 1e-7,
+    "weight_decay": 0.01,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.98,
+    "adam_epsilon": 1e-06,
+    "max_grad_norm": 1.0,
+    "num_train_epochs": 4,
+    "max_steps": -1,
+    "lr_scheduler_type": "linear",
+    "warmup_ratio": 0.2,
+    "logging_first_step": false,
+    "logging_steps": 50,
+    "save_strategy": "epoch",
+    "seed": 42,
+    "dataloader_drop_last": true,
+    "eval_steps": 200,
+    "run_name": "test6",
+    "adafactor": false,
+    "report_to": "all",
+    "skip_memory_metrics": true,
+    "resume_from_checkpoint": null
+}
+
+13. 
