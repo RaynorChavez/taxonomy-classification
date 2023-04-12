@@ -2,6 +2,7 @@ import ijson
 import json
 import os
 import time
+from PIL import Image
 
 dataset_subset = "subset1k"
 split = "valid"
@@ -22,8 +23,14 @@ with open(final_text_aug) as f:
         #print(item)
         local_path = os.path.join(resized_folder, image_filename)
         
+        # Check if the image file exists, is non-empty and not corrupted
         if os.path.isfile(local_path):
-            textaug_full.append(item)
+            try:
+                with Image.open(local_path) as img:
+                    img.verify()
+                    textaug_full.append(item)
+            except Exception as e:
+                print(f"Error processing {local_path}: {e}")
         
         processed += 1
         if processed%1000 == 0:
