@@ -3,3 +3,4 @@ tvenv/*
 steps_gcloudvm/*
 arguments.json
 text_augmented_dataset_rsicd.json
+head_of_csv.py
