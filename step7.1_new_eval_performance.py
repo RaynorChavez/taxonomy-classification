@@ -31,7 +31,7 @@ def parse_arguments():
 
 def predict_one_image(image_file, model, processor, class_names, k):
     eval_image = Image.fromarray(plt.imread(os.path.join(IMAGES_DIR, image_file)))
-    eval_sentences = ["Photograph of {:s}".format(ct) for ct in class_names]
+    eval_sentences = ["This is an example of species {:s}".format(ct) for ct in class_names]
     inputs = processor(text=eval_sentences,
                        images=eval_image,
                        return_tensors="jax",
@@ -72,7 +72,7 @@ else:
 print("Retrieving evaluation images...", end="")
 eval_images = []
 df = pd.read_csv("data/final_test_set_with_taxon_tree.csv", encoding='utf-8')
-eval_images = df['filename'].tolist()
+eval_images = df['image_link'].map(lambda x: "data/new_test_images_5k/" + x.split('/')[-1]).tolist()
 
 print("{:d} images found".format(len(eval_images)))
 
