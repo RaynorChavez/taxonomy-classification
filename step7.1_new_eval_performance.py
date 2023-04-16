@@ -90,11 +90,10 @@ num_predicted = 0
 for eval_image, label in zip(eval_images, labels):
     if num_predicted % 10 == 0:
         print("{:d} images evaluated".format(num_predicted))        
-    try:
-        preds = predict_one_image(
-            eval_image, model, processor, class_names, max(K_VALUES))
-    except:
+    if not os.path.exists(eval_image):
         break
+    preds = predict_one_image(
+        eval_image, model, processor, class_names, max(K_VALUES))
     fres.write("{:s}\t{:s}\t{:s}\n".format(
         eval_image, label, 
         "\t".join(["{:s}\t{:.5f}".format(c, p) for c, p in preds])))
