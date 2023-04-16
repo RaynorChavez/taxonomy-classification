@@ -249,9 +249,9 @@ class Transform(torch.nn.Module):
                 ColorJitter(),
                 RandomHorizontalFlip(augmentation_args.random_horizontal_flip),
                 RandomVerticalFlip(augmentation_args.random_vertical_flip),
-                RandomResizedCrop(crop_size, scale=(0.8, 1.2), ratio=(1.0, 1.0)),
+                RandomResizedCrop(crop_size, scale=(0.8, 1.2), ratio=(1.0, 1.0), antialias=True),
                 # /image augmentation transforms
-                Resize([image_size], interpolation=InterpolationMode.BICUBIC),
+                Resize([image_size], interpolation=InterpolationMode.BICUBIC, antialias=True),
                 CenterCrop(image_size),
                 ConvertImageDtype(torch.float),
                 Normalize((0.48145466, 0.4578275, 0.40821073), (0.26862954, 0.26130258, 0.27577711)),
