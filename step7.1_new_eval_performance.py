@@ -72,7 +72,7 @@ else:
 print("Retrieving evaluation images...", end="")
 eval_images = []
 df = pd.read_csv("data/final_test_set_with_taxon_tree.csv", encoding='utf-8')
-eval_images = df['image_link'].map(lambda x: "data/new_test_images_5k/" + x.split('/')[-1]).tolist()
+eval_images = df['image_link'].map(lambda x: "new_test_images_5k/" + x.split('/')[-1]).tolist()
 
 print("{:d} images found".format(len(eval_images)))
 
