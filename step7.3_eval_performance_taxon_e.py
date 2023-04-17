@@ -72,9 +72,9 @@ else:
 print("Retrieving evaluation images...", end="")
 eval_images = []
 df = pd.read_csv("data/validated_test_set.csv", encoding='utf-8')
-df = df.loc[df['fn'].duplicated()].copy(deep=True)
 df = df.merge(pd.read_csv("data/filename_taxons_df.csv").merge(pd.read_csv("data/full_captions_taxons_dataset.csv").drop(['new_captions'], axis=1), on='filename', how='left'), how='left', on='species')
-df = df.dropna(subset=['taxon_e_x'])
+df = df.loc[~df['fn'].duplicated()].copy(deep=True)
+df = df.dropna(subset=['taxon_e'])
 eval_images = df['fn'].map(lambda x: "test_images/"+x.replace('.png','.jpg')).tolist()
 
 print("{:d} images found".format(len(eval_images)))
@@ -88,7 +88,7 @@ labels = df['taxon_e'].tolist()
 
 print("Generating predictions...")
 fres = open(os.path.join(
-    "data", "results", get_model_basename(args.model_dir) + "_taxon_e_new_test_preds.tsv"), "w")
+    "data", "results", get_model_basename(args.model_dir) + "_taxon_e_old_test_preds.tsv"), "w")
 num_predicted = 0
 for eval_image, label in zip(eval_images, labels):
     if num_predicted % 10 == 0:
@@ -112,7 +112,7 @@ print("Computing final scores...")
 num_examples = 0
 correct_k = [0] * len(K_VALUES)
 model_basename = get_model_basename(args.model_dir)
-fres = open(os.path.join("data", "results", model_basename + "_taxon_e_new_test_preds.tsv"), "r")
+fres = open(os.path.join("data", "results", model_basename + "_taxon_e_old_test_preds.tsv"), "r")
 for line in fres:
     cols = line.strip().split('\t')
     label = cols[1]
@@ -129,7 +129,7 @@ fres.close()
 scores_k = [ck / num_examples for ck in correct_k]
 print("\t".join(["score@{:d}".format(k) for k in K_VALUES]))
 print("\t".join(["{:.3f}".format(s) for s in scores_k]))
-fscores = open(os.path.join("data", "results", model_basename + "_taxon_e_new_test_score.tsv"), "w")
+fscores = open(os.path.join("data", "results", model_basename + "_taxon_e_old_test_score.tsv"), "w")
 fscores.write("{:s}\t{:s}\n".format(
     model_basename, 
     "\t".join(["{:.3f}".format(s) for s in scores_k])))
