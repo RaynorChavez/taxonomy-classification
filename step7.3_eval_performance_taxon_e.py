@@ -74,7 +74,7 @@ eval_images = []
 df = pd.read_csv("data/validated_test_set.csv", encoding='utf-8')
 df = df.loc[df['fn'].duplicated()].copy(deep=True)
 df = df.merge(pd.read_csv("data/filename_taxons_df.csv").merge(pd.read_csv("data/full_captions_taxons_dataset.csv").drop(['new_captions'], axis=1), on='filename', how='left'), how='left', on='species')
-df = df.dropna(subset=['taxon_e'])
+df = df.dropna(subset=['taxon_e_x'])
 eval_images = df['fn'].map(lambda x: "test_images/"+x.replace('.png','.jpg')).tolist()
 
 print("{:d} images found".format(len(eval_images)))
