@@ -72,7 +72,7 @@ else:
 print("Retrieving evaluation images...", end="")
 eval_images = []
 df = pd.read_csv("data/validated_test_set.csv", encoding='utf-8')
-df.merge(pd.read_csv("data/filename_taxons_df.csv"), how='left', on='species')
+df = df.merge(pd.read_csv("data/filename_taxons_df.csv").merge(pd.read_csv("data/full_captions_taxons_dataset.csv").drop(['new_captions'], axis=1), on='filename', how='left'), how='left', on='species')
 df = df.dropna(subset=['taxon_e'])
 eval_images = df['fn'].map(lambda x: "test_images/"+x.replace('.png','.jpg')).tolist()
 
