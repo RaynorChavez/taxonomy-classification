@@ -31,7 +31,7 @@ def parse_arguments():
 
 def predict_one_image(image_file, model, processor, class_names, k):
     eval_image = Image.fromarray(plt.imread(os.path.join(IMAGES_DIR, image_file)))
-    eval_sentences = ["This is an example of species {:s}".format(ct) for ct in class_names]
+    eval_sentences = ["Belongs to order, {:s}".format(ct) for ct in class_names]
     inputs = processor(text=eval_sentences,
                        images=eval_image,
                        return_tensors="jax",
