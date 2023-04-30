@@ -81,10 +81,13 @@ else:
 
 print("Retrieving evaluation images...", end="")
 df = df.merge(pd.read_csv("data/test_hierarchy_reference.csv"), how='left', on='species')
+# fixes
+class_cols = ['phylum', 'class', 'family', 'genus', 'order', 'species']
+df = df.dropna(subset='kingdom', how='all')
 
 print("{:d} images found".format(len(eval_images)))
 
-for class_col in ['phylum', 'class', 'family', 'genus', 'order', 'species']:
+for class_col in class_cols:
     print(f"Retrieving class names in taxon classification: {class_col}...", end="")
     class_names = df[class_col].dropna().unique().tolist()
     print("{:d} classes found".format(len(class_names)))
