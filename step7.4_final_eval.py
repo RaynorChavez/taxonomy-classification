@@ -127,7 +127,7 @@ for class_col in class_cols:
         cols = line.strip().split('\t')
         label = cols[1]
         preds = []
-        for i in range(2, 22, 2):
+        for i in range(2, min(len(cols),22), 2):
             preds.append(cols[i])
         for kid, k in enumerate(K_VALUES):
             preds_k = set(preds[0:k])
