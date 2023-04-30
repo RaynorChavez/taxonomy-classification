@@ -303,8 +303,8 @@ class ImageTextDataset(VisionDataset):
             prefix = "textaug_"
         else:
             prefix = ""
-        filepaths = Path(root).glob(f"{prefix}{split}*.json")
-        print(f"filepaths: {filepaths} | {prefix}{split}*.json")
+        filepaths = Path(root).glob(f"{split}*.json")
+        print(f"filepaths: {filepaths} | {split}*.json")
         self.captions = []
         self.image_paths = []
         if not filepaths:
