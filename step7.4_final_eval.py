@@ -86,7 +86,7 @@ print("{:d} images found".format(len(eval_images)))
 
 for class_col in ['phylum', 'class', 'family', 'genus', 'order', 'species']:
     print(f"Retrieving class names in taxon classification: {class_col}...", end="")
-    class_names = df[class_col].unique().tolist()
+    class_names = df[class_col].dropna()unique().tolist()
     print("{:d} classes found".format(len(class_names)))
 
     labels = df[class_col].tolist()
