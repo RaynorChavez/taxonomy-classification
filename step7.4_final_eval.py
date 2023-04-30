@@ -139,7 +139,7 @@ for class_col in class_cols:
     scores_k = [ck / num_examples for ck in correct_k]
     print("\t".join(["score@{:d}".format(k) for k in K_VALUES]))
     print("\t".join(["{:.3f}".format(s) for s in scores_k]))
-    fscores = open(os.path.join("data", "results", model_basename + f"_score_mult_class.tsv"), "a")
+    fscores = open(os.path.join("data", "results", model_basename + f"_score_mult_class_{args.dataset}.tsv"), "a")
     fscores.write("{:s}\t{:s}\n".format(
         model_basename+f'_{class_col}', 
         "\t".join(["{:.3f}".format(s) for s in scores_k])))
