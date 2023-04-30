@@ -25,6 +25,8 @@ def parse_arguments():
     parser.add_argument("model_dir",
                         help="Path of model to evaluate, set to 'baseline' for baseline. Intermediate \
                         results will be written out to nbs/results/${model_name}")
+    parser.add_argument("dataset",
+                        help="Dataset to be used for classification testing. Default is 5k images.")
     args = parser.parse_args()
     return args
 
