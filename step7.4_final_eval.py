@@ -33,7 +33,7 @@ def parse_arguments():
 
 def predict_one_image(image_file, model, processor, class_names, k, order):
     eval_image = Image.fromarray(plt.imread(os.path.join(IMAGES_DIR, image_file)))
-    eval_sentences = ["Belongs to {:s} {:s}".format(ct, order) for ct in class_names]
+    eval_sentences = ["Belongs to {:s} {:s}".format(order, ct) for ct in class_names]
     inputs = processor(text=eval_sentences,
                        images=eval_image,
                        return_tensors="jax",
@@ -139,8 +139,8 @@ for class_col in class_cols:
     scores_k = [ck / num_examples for ck in correct_k]
     print("\t".join(["score@{:d}".format(k) for k in K_VALUES]))
     print("\t".join(["{:.3f}".format(s) for s in scores_k]))
-    fscores = open(os.path.join("data", "results", model_basename + f"_score_{class_col}.tsv"), "w")
+    fscores = open(os.path.join("data", "results", model_basename + f"_score_mult_class.tsv"), "a")
     fscores.write("{:s}\t{:s}\n".format(
-        model_basename, 
+        model_basename+f'_{class_col}', 
         "\t".join(["{:.3f}".format(s) for s in scores_k])))
     fscores.close()
