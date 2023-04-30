@@ -31,9 +31,9 @@ def parse_arguments():
     return args
 
 
-def predict_one_image(image_file, model, processor, class_names, k):
+def predict_one_image(image_file, model, processor, class_names, k, order):
     eval_image = Image.fromarray(plt.imread(os.path.join(IMAGES_DIR, image_file)))
-    eval_sentences = ["Belongs to {:s}".format(ct) for ct in class_names]
+    eval_sentences = ["Belongs to {:s} {:s}".format(ct, order) for ct in class_names]
     inputs = processor(text=eval_sentences,
                        images=eval_image,
                        return_tensors="jax",
@@ -106,7 +106,7 @@ for class_col in class_cols:
         if not os.path.exists("data/" + eval_image):
             continue
         preds = predict_one_image(
-            eval_image, model, processor, class_names, max(K_VALUES))
+            eval_image, model, processor, class_names, max(K_VALUES), class_col)
         fres.write("{:s}\t{:s}\t{:s}\n".format(
             eval_image, label, 
             "\t".join(["{:s}\t{:.5f}".format(c, p) for c, p in preds])))
