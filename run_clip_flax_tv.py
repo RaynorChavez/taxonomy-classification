@@ -604,7 +604,7 @@ def main():
                 run_name = training_args.run_name
             wandb.init(
                 name=run_name,
-                entity="wandb", 
+                entity="species-classif", 
                 project="hf-flax-clip-rsicd",
                 sync_tensorboard=True
             )
