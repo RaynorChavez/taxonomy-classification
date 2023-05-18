@@ -528,7 +528,7 @@ def main():
     eval_dataset = ImageTextDataset(
         data_args.data_dir,
         "valid",
-        captions_per_image=data_args.captions_per_image,
+        captions_per_image=1,
         augment_captions=False, # REMEMBER TO PUT IT BACK TO FALSE
         transform=eval_preprocess,
     )

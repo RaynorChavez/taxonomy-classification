@@ -30,7 +30,7 @@ with open(kyle_aug) as f:
         #processed += 1
         
         # Get filename and check if it also exists in the textaug_train_full.json file
-        image_filename = item["filename"][17:]
+        image_filename = item["filename"]
         filenames_in_kyle.add(image_filename)
     print("Done with kyle_aug")
 
@@ -62,6 +62,7 @@ with open(kyle_aug) as f:
         #print(image_filename)
         if image_filename not in filenames_not_in_textaug:
             #print("found: ", image_filename)
+            item["filename"] = "textaug_train_full/"+item["filename"]
             textaug_train_full_capaug.append(item)
 
         if processed < 2:
@@ -69,8 +70,9 @@ with open(kyle_aug) as f:
         if processed%500 == 0:
             print("Processed: ", processed, "entries")
 
-with open(textaug_train_full_capaug_path, 'w', encoding='utf-8') as outfile:
+with open(textaug_train_full_capaug_path, 'w') as outfile:
     for entry in textaug_train_full_capaug:
         json.dump(entry, outfile)
         outfile.write('\n')
-print("Done with outputting to textaug_train_full_capaug_fixed.json")
+
+print("Done with outputting to textaug_train_full_capaug.json")

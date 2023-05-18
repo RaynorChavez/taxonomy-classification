@@ -4,19 +4,22 @@ import os
 import time
 from PIL import Image
 
-dataset_subset = "subset1k"
-split = "valid"
+dataset_subset = "full"
+split = "train"
 resized_folder = f'./data/taxo_data_images_{dataset_subset}_resized/'
 #Path(resized_folder).mkdir(parents=True, exist_ok=True)
 
 processed = 0
-final_text_aug = f'./data/textaug_{dataset_subset}.json'
+final_text_aug = f'./data/full_captions_taxons_dataset.json'
 
 textaug_full = []
 with open(final_text_aug) as f:
     t0 = time.time()
     for line in f:
         item = json.loads(line)
+        if processed == 0:
+            print(item)
+        # print("Item: ", processed, item["filename"][17:])
 
         # Get filename and check if image exists locally
         image_filename = item["filename"][17:]
@@ -33,9 +36,9 @@ with open(final_text_aug) as f:
                 print(f"Error processing {local_path}: {e}")
         
         processed += 1
-        if processed%1000 == 0:
+        if processed%100 == 0:
             print("Processed: ", processed, "entries")
 
-with open(f'./data/textaug_{split}_{dataset_subset}.json', 'w') as f:
+with open(f'./data/textaug_{split}_{dataset_subset}_capaug.json', 'w') as f:
     for item in textaug_full:
         f.write(json.dumps(item)+'\n')
